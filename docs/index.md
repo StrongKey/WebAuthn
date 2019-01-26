@@ -22,7 +22,10 @@ A sample registration example:
 ```
 let credential = await navigator.credentials.create({ publicKey: {
   challenge: Uint8Array(32) [74, 72, 233, ...]
-  rp: { id: "example.com", name: "Example Web App" },
+  rp: {
+    id: "example.com",
+    name: "Example Web App"
+  },
   user: {
     id: Uint8Array(8) [14, 97, 23, 76, 125, 89, 231, 13]
     name: "johndoe",
