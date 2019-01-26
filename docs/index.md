@@ -1,6 +1,6 @@
 # What is WebAuthn?
 Web Authentication - usually shortened to "**WebAuthn**" - is the JavaScript API for cryptographic authentication that's being standardized by the [W3C](https://www.w3.org/TR/webauthn/) and built into most modern browsers. WebAuthn is one of the elements that work together to provide strong authentication via the FIDO (Fast Identity Online) standard:
-- **WebAuthn**: the JavaScript API used to communicate with Authenticators and the FIDO Server.
+- **WebAuthn**: the JavaScript API used to communicate with Authenticators.
 - **Relying Party**: the web app that communicates to the Authenticator through WebAuthn and to the FIDO Server for user registration and authentication.
 - **Authenticator**: a cryptographic device that creates private/public key pairs and verifies user presence and consent through methods like a successful fingerprint scan. Authenticators are accessible to the browser either as an embedded element (such as a fingerprint scanner on a smartphone or laptop) or through USB, Bluetooth Low Energy (BLE), or Near-Field Communication (NFC).
 - **FIDO Server**: the authentication server that verifies the identity of the user. The FIDO Server provides the APIs to communicate with the Relying Party.
