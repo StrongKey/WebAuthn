@@ -13,15 +13,13 @@ The following links provide some background on FIDO, the Fido Alliance, and WebA
 ## Installation
 Download the installation package [here](https://github.com/StrongKey/FIDO-Server/tree/master/fidoserver/fidoserverInstall/src) and save it, then follow [the installation instructions](https://github.com/StrongKey/FIDO-Server/blob/master/docs/Installation_Guide_Linux.md) to get it running.
 
-To see it in action, sample code is provided in the links below.
+## Contributing
+If you would like to contribute to the FIDO2 Community Edition Server project, please read [CONTRIBUTING.md](https://github.com/StrongKey/WebAuthn/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
 
-## Sample Code
-Sample Relying Party code is also provided with a brief explanation:
+## Other Samples
+Sample Relying Party Java is also provided with a brief explanation:
 
-* [Relying Party](https://github.com/StrongKey/relying-party-java) - Java sample
+* [Relying Party](https://github.com/StrongKey/relying-party-java)
 
 ## API docs
 [Open API documentation for FIDO2/WebAuthn](https://github.com/StrongKey/FIDO-Server/blob/master/docs/fido-openapi.yaml)
-
-## Contributing
-If you would like to contribute to the FIDO2 Community Edition Server project, please read [CONTRIBUTING.md](https://github.com/StrongKey/FIDO-Server/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
