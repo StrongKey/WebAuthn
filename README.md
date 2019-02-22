@@ -16,7 +16,7 @@ Download the installation package [here](https://github.com/StrongKey/FIDO-Serve
 To see it in action, sample code is provided in the links below.
 
 ## Sample Code
-Sample Code is provided with a brief explanation of what each sample does:
+Sample Relying Party code is also provided with a brief explanation:
 
 * [Relying Party](https://github.com/StrongKey/relying-party-java) - Java sample
 
