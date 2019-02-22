@@ -24,4 +24,4 @@ Sample Relying Party code is also provided with a brief explanation:
 [Open API documentation for FIDO2/WebAuthn](https://github.com/StrongKey/FIDO-Server/blob/master/docs/fido-openapi.yaml)
 
 ## Contributing
-If you would like to contribute to the FIDO2 Community Edition Server project, please sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
+If you would like to contribute to the FIDO2 Community Edition Server project, please read [CONTRIBUTING.md](https://github.com/StrongKey/FIDO-Server/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
