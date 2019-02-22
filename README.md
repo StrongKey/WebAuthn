@@ -17,8 +17,7 @@ Download the installation package [here](https://github.com/StrongKey/FIDO-Serve
 If you would like to contribute to the FIDO2 Community Edition Server project, please read [CONTRIBUTING.md](https://github.com/StrongKey/WebAuthn/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
 
 ## Other Samples
-Sample Relying Party Java is also provided with a brief explanation:
-
+* [FIDO Server](https://github.com/StrongKey/FIDO-Server)
 * [Relying Party](https://github.com/StrongKey/relying-party-java)
 
 ## API docs
