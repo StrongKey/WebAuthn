@@ -155,11 +155,17 @@ class FidoTutorial {
 					if (this.registering) {
 						if (!this.loggedIn) {
 							this.post('register', response)
-								.then(regResponse => that.onRegResult(regResponse));
+								.then(regResponse => that.onRegResult(regResponse))
+								.catch(error => {
+									that.onError(error.Message)
+								});
 						}
 						else {
 							this.post('registerExisting', response)
-								.then(regResponse => that.onRegResult(regResponse));
+								.then(regResponse => that.onRegResult(regResponse))
+								.catch(error => {
+									that.onError(error.Message)
+								});
 						}
 					}				
 				}).catch(error => {
