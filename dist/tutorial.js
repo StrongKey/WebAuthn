@@ -74,31 +74,38 @@ var textDecoder = new TextDecoder("utf-8");
 class FidoTutorial {
 	constructor() {
 		this.server = '/webauthntutorial/';
+		this.username = null;
 		this.loggedIn = false;
 		this.registering = false;
 	}
 
 	initUI() {
+		// update our session label
 		this.isLoggedIn();
 
 		$('#regSubmit').click(() => {
 			if (!this.loggedIn) {
 				this.registering = true;
-				this.preregister({
+				this.post('preregister', {
 					"username": $('#regUsername').val(),
 					"displayName": $('#regDisplayName').val()
 				})
 				.then((resp) => {
 					if (resp.Error == "true") onError(resp.Message);
 					this.register(resp.Response);
-				});
-				// .catch(this.handleError);
+				})
+				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 			}
 			else {
-				this.preregisterExisting({
+				this.post('preregisterExisting', {
 					"username": $('#regUsername').val(),
 					"displayName": $('#regDisplayName').val()
-				});
+				})
+				.then((resp) => {
+					if (resp.Error == "true") onError(resp.Message);
+					this.registerExisting(resp.Response);
+				})
+				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 			}
 		});
 
@@ -111,8 +118,8 @@ class FidoTutorial {
 			.then((resp) => {
 				if (resp.Error == "true") onError(resp.Message);
 				this.authenticate(resp.Response);
-			});
-			// .catch(this.handleError);
+			})
+			.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 		});
 	}
 
@@ -121,15 +128,12 @@ class FidoTutorial {
 			.then((resp) => {
 				if (resp.Error == "true") onError(resp.Message);
 				this.loggedIn = (resp.Response === "True");
+				// should be handling this using binding but keeping it simple for demo
 				$('#sessionStatus').text(this.loggedIn);
-			});
-			// .catch(this.handleError);
+			})
+			.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 			
 		return this.isLoggedIn;
-	}
-
-	preregister(data) {
-		return this.post('preregister', data);
 	}
 
 	register(preregResponse) {
@@ -139,12 +143,12 @@ class FidoTutorial {
 			this.onError(preregResponse.serviceErr.Message);
 		}
 		else {
-			let responseBody = JSON.parse(preregResponse).Challenge;
+			let responseBody = JSON.parse(preregResponse).Response;
 			// let responseChallenge = JSON.parse(JSON.stringify(responseBody.challenge));
 			let challengeBuffer = this.preregToBuffer(preregResponse);
 			let credentialsContainer;
 			credentialsContainer = window.navigator;
-			credentialsContainer.credentials.create({ publicKey: challengeBuffer.Challenge })
+			credentialsContainer.credentials.create({ publicKey: challengeBuffer.Response })
 				.then((resp) => {
 					let response = this.preregResponseToBase64(resp);
 					// let that = this;
@@ -164,17 +168,23 @@ class FidoTutorial {
 		}
 	}
 
+	registerExisting(data) {
+		this.post('registerExisting', data, (respData) => {
+			this.registerExistingResponse(respData);
+		});
+	}
+
 	preregToBuffer(input) {
 		input = JSON.parse(input);
 		
-		input.Challenge.challenge = window.base64url.decode(input.Challenge.challenge);
-		console.log(textDecoder.decode(input.Challenge.challenge));
+		input.Response.challenge = window.base64url.decode(input.Response.challenge);
+		console.log(textDecoder.decode(input.Response.challenge));
 
-		input.Challenge.user.id = window.base64url.decode(input.Challenge.user.id);
-		if (input.Challenge.excludeCredentials) {
-			for (let i = 0; i < input.Challenge.excludeCredentials.length; i++) {
-				input.Challenge.excludeCredentials[i].id = input.Challenge.excludeCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-				input.Challenge.excludeCredentials[i].id = window.base64url.decode(input.Challenge.excludeCredentials[i].id);
+		input.Response.user.id = window.base64url.decode(input.Response.user.id);
+		if (input.Response.excludeCredentials) {
+			for (let i = 0; i < input.Response.excludeCredentials.length; i++) {
+				input.Response.excludeCredentials[i].id = input.Response.excludeCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+				input.Response.excludeCredentials[i].id = window.base64url.decode(input.Response.excludeCredentials[i].id);
 			}
 		}
 		return input;
@@ -193,33 +203,21 @@ class FidoTutorial {
 
 	onRegResult(regResponse) {
 		let responseJSON = JSON.parse(JSON.stringify(regResponse));
+		if (responseJSON.Error == "true") onError(resp.Message);
+
 		// let body = JSON.parse(JSON.stringify(responseJSON.body));
-		let body = responseJSON;
-		let error = body.Error;
+		// let body = responseJSON;
+		// let error = responseJSON.Error;
 		// let message = body.Message;
-		let response = body.Response;
-		if (response === "Successfully processed registration response") {
-			console.log(response);
-			let username = this._sharedService.getNewUserName();
-			this._sharedService.setUsername(username);
-			this.zone.run(() => this._router.navigateByUrl("/profile"));
-		} else this.onError(error);
+		if (responseJSON.Response === "Successfully processed registration response") {
+			this.username = $('#regUsername').val();
+			// refresh session state
+			this.isLoggedIn();
+		} 
 	}
 
 	onError(errMsg) {
 		alert(errMsg);
-	}
-
-	preregisterExisting(data) {
-		this.post('preregisterExisting', data, (respData) => {
-			this.registerExisting(respData.Response);
-		});
-	}
-
-	registerExisting(data) {
-		this.post('registerExisting', data, (respData) => {
-			this.registerExistingResponse(respData);
-		});
 	}
 
 	preauthenticate(data) {
@@ -242,19 +240,6 @@ class FidoTutorial {
 			contentType: 'application/json; charset=UTF-8',
 			dataType: 'json'
 		});
-	}
-
-	preregToBuffer(input) {
-		input = JSON.parse(input);
-		input.Challenge.challenge = base64url.decode(input.Challenge.challenge);
-		input.Challenge.user.id = base64url.decode(input.Challenge.user.id);
-		if (input.Challenge.excludeCredentials) {
-			for (let i = 0; i < input.Challenge.excludeCredentials.length; i++) {
-				input.Challenge.excludeCredentials[i].id = input.Challenge.excludeCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-				input.Challenge.excludeCredentials[i].id = base64url.decode(input.Challenge.excludeCredentials[i].id);
-			}
-		}
-		return input;
 	}
 }
 
