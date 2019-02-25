@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>STRONGKEY FIDO Tutorial App</title>
+	<link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+	<h1>STRONGKEY FIDO TUTORIAL</h1>
+
+	<div class="" style="padding-top: 20px">
+		<div style="display: inline-block">Logged In: </div>
+		<div id="sessionStatus" style="display: inline-block">(unknown)</div>
+		<button class="" id="registerSubmit" style="display: none; margin-left: 10px">
+		Log Out 
+		</button>
+	</div>
+
+	<div class="" style="padding-top: 30px">
+		<div style="">
+			<input autocomplete="off" class="" id="regUsername" placeholder="Username" required="" style=""
+				type="text">
+			<input autocomplete="off" class="" id="regDisplayName" placeholder="Display Name" required=""
+				style="margin-left: 10px" type="text">
+			<button class="" id="regSubmit" style="margin-left: 10px">
+				Register New Key
+			</button>
+		</div>
+		<!-- registration result message 
+		<p style="color: green; margin-top: 5px"></p> -->
+	</div>
+
+	<div class="" style="padding-top: 20px">
+		<div style="">
+			<input class="" name="authUsername" placeholder="Username" required="" style="" type="text">
+			<button class="" id="authSubmit" style="margin-left: 10px">
+				Authenticate
+			</button>
+		</div>
+		<!-- authentication result message 
+		<p style="color: green; margin-top: 5px"></p> -->
+	</div>
+
+	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+	<script src="tutorial.js"></script>
+</body>
+
+</html>
