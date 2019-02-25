@@ -41,7 +41,7 @@ This project is a sample WebAuthn client written to work with the [StrongKey FID
     
     Remember to be sure that your firewall allows access to port 8181.
 
-## Contributing
+## Contributing to sample WebAuthn
 If you would like to contribute to the [sample WebAuthn client](https://github.com/StrongKey/WebAuthn) project, please read [CONTRIBUTING.md](https://github.com/StrongKey/WebAuthn/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
 
 ## Other Samples
