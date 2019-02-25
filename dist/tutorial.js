@@ -133,6 +133,9 @@ class FidoTutorial {
 			this.post('logout', null)
 				.done((resp) => {
 					if (resp.Error == "true") onError(resp.Message);
+					$('#regUsername').val('');
+					$('#regDisplayName').val('');
+					$('#authUsername').val('');
 					this.isLoggedIn();
 				})
 				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
