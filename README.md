@@ -13,27 +13,27 @@ This project is a sample WebAuthn client written to work with the [StrongKey FID
 
 1. Switch to (or login as) the _strongkey_ user.
   
-  ```sh
-  su strongkey
-  ```
+    ```sh
+    su strongkey
+    ```
 
 2. Change directory to _/usr/local/strongkey_ (the home directory for the _strongkey_ user).
 
-  ```sh
-  cd /usr/local/strongkey
-  ```
+    ```sh
+    cd /usr/local/strongkey
+    ```
 
 3. Download the WebAuthn distribution file [WebAuthn.tgz](https://github.com/StrongKey/WebAuthn/blob/master/WebAuthn.tgz).
 
-  ```sh
-  wget https://github.com/StrongKey/WebAuthn/raw/master/WebAuthn.tgz
-  ```
+    ```sh
+    wget https://github.com/StrongKey/WebAuthn/raw/master/WebAuthn.tgz
+    ```
 
 4. Extract the distribution to the default Payara docroot.
 
-  ```sh
-  tar xvzf WebAuthn.tgz -C payara41/glassfish/domains/domain1/docroot/
-  ```
+    ```sh
+    tar xvzf WebAuthn.tgz -C payara41/glassfish/domains/domain1/docroot/
+    ```
 
 5. Now point your browser to the following URL: https://\<YOUR SERVER ADDRESS>:8181/tutorial.html. Remember to be sure that your firewall allows access to port 8181.
 
