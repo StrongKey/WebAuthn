@@ -36,7 +36,9 @@ This project is a sample WebAuthn client written to work with the [StrongKey FID
     ```
 
 5. Now point your browser to the following URL:
+
     https://\<YOUR SERVER ADDRESS>:8181/tutorial.html.
+    
     Remember to be sure that your firewall allows access to port 8181.
 
 ------------------------
