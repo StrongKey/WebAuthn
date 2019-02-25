@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 /*
 * Base64URL-ArrayBuffer
@@ -84,11 +84,14 @@ class FidoTutorial {
 			this.registering = true;
 			if (!this.loggedIn) {
 				this.post('preregister', {
-					"username": $('#regUsername').val(),
-					"displayName": $('#regDisplayName').val()
+					'username': $('#regUsername').val(),
+					'displayName': $('#regDisplayName').val()
 				})
 					.done((resp) => {
-						if (resp.Error == "true") onError(resp.Message);
+						if (resp.Error == 'true') {
+							onError(resp.Message);
+							return;
+						}
 						this.register(resp.Response);
 					})
 					.fail((jqXHR, textStatus, errorThrown) => { 
@@ -97,10 +100,13 @@ class FidoTutorial {
 			}
 			else {
 				this.post('preregisterExisting', {
-					"displayName": $('#regDisplayName').val()
+					'displayName': $('#regDisplayName').val()
 				})
 					.done((resp) => {
-						if (resp.Error == "true") onError(resp.Message);
+						if (resp.Error == 'true') {
+							onError(resp.Message);
+							return;
+						}
 						this.register(resp.Response);
 					})
 					.fail((jqXHR, textStatus, errorThrown) => { 
@@ -113,15 +119,18 @@ class FidoTutorial {
 			this.registering = false;
 
 			this.post('preauthenticate', {
-				"username": $('#authUsername').val()
+				'username': $('#authUsername').val()
 			})
 				.done((resp) => {
-					if (resp.Error == "true") onError(resp.Message);
+					if (resp.Error == 'true') {
+						onError(resp.Message);
+						return;
+					}
 					this.authenticate(/* JSON.parse(JSON.stringify(resp)) */ resp.Response);
 				})
 				.fail((jqXHR, textStatus, errorThrown) => { 
 					if (jqXHR.status = 401) {
-						this.onError("Username doesn't exist");
+						this.onError('Username does not exist');
 					} 
 					else {
 						this.onError(jqXHR.responseJSON.Message || textStatus); 
@@ -132,11 +141,15 @@ class FidoTutorial {
 		$('#logout').click(() => {
 			this.post('logout', null)
 				.done((resp) => {
-					if (resp.Error == "true") onError(resp.Message);
-					$('#regUsername').val('');
-					$('#regDisplayName').val('');
-					$('#authUsername').val('');
-					this.isLoggedIn();
+					if (resp.Error != 'true') {
+						$('#regUsername').val('');
+						$('#regDisplayName').val('');
+						$('#authUsername').val('');
+						this.isLoggedIn();
+					}
+					else {
+						onError(resp.Message);
+					}
 				})
 				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 		});
@@ -145,15 +158,19 @@ class FidoTutorial {
 	isLoggedIn() {
 		this.post('isLoggedIn', null)
 			.done((resp) => {
-				if (resp.Error == "true") onError(resp.Message);
-				this.username = resp.Response;
-				this.loggedIn = !!this.username;
-				// should be handling this using binding but keeping it simple for demo
-				$('#sessionStatus').text(this.username || "(none)");
-				$('#logout').prop('disabled', !this.loggedIn);
-				$('#regUsername').prop('disabled', this.loggedIn);
-				$('#authUsername').prop('disabled', this.loggedIn);
-				$('#authSubmit').prop('disabled', this.loggedIn);				
+				if (resp.Error != 'true') {
+					this.username = resp.Response;
+					this.loggedIn = !!this.username;
+					// should be handling this using binding but keeping it simple for demo
+					$('#sessionStatus').text(this.username || '(none)');
+					$('#logout').prop('disabled', !this.loggedIn);
+					$('#regUsername').prop('disabled', this.loggedIn);
+					$('#authUsername').prop('disabled', this.loggedIn);
+					$('#authSubmit').prop('disabled', this.loggedIn);				
+				}
+				else {
+					onError(resp.Message);
+				}
 			})
 			.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 
@@ -171,6 +188,10 @@ class FidoTutorial {
 			let challengeBuffer = this.preregToBuffer(preregResponse);
 			let credentialsContainer;
 			credentialsContainer = window.navigator;
+			if (!credentialsContainer.credentials) {
+				this.onError("WebAuthn is unsupported by this browser");
+				return;
+			}
 			credentialsContainer.credentials.create({ publicKey: challengeBuffer.Response })
 				.then((resp) => {
 					let response = this.preregResponseToBase64(resp);
@@ -188,7 +209,7 @@ class FidoTutorial {
 					}
 				})
 				.catch(error => {
-					that.onError(error)
+					that.onError(error);
 				});
 		}
 	}
@@ -202,6 +223,10 @@ class FidoTutorial {
 			let challengeBuffer = this.preauthToBuffer(preauthResponse);
 			let credentialsContainer;
 			credentialsContainer = window.navigator;
+			if (!credentialsContainer.credentials) {
+				this.onError("Upgrade your browser to use FIDO authentication");
+				return;
+			}
 			credentialsContainer.credentials.get({ publicKey: challengeBuffer.Response })
 				.then((resp) => {
 					let response = that.preauthResponseToBase64(resp);
@@ -222,7 +247,7 @@ class FidoTutorial {
 
 		if (input.Response.excludeCredentials) {
 			for (let i = 0; i < input.Response.excludeCredentials.length; i++) {
-				input.Response.excludeCredentials[i].id = input.Response.excludeCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+				input.Response.excludeCredentials[i].id = input.Response.excludeCredentials[i].id.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 				input.Response.excludeCredentials[i].id = base64url.decode(input.Response.excludeCredentials[i].id);
 			}
 		}
@@ -236,7 +261,7 @@ class FidoTutorial {
 		if (input.Response.allowCredentials) {
 			for (let i = 0; i < input.Response.allowCredentials.length; i++) {
 				// must convert from Base64 to Base64URL safe first
-				input.Response.allowCredentials[i].id = input.Response.allowCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+				input.Response.allowCredentials[i].id = input.Response.allowCredentials[i].id.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
 				input.Response.allowCredentials[i].id = base64url.decode(input.Response.allowCredentials[i].id);
 			}
 		}
@@ -269,9 +294,12 @@ class FidoTutorial {
 
 	onRegResult(regResponse) {
 		let responseJSON = JSON.parse(JSON.stringify(regResponse));
-		if (responseJSON.Error == "true") onError(resp.Message);
+		if (responseJSON.Error == 'true') {
+			onError(resp.Message);
+			return;
+		}
 
-		if (responseJSON.Response === "Successfully processed registration response") {
+		if (responseJSON.Response === 'Successfully processed registration response') {
 			this.username = $('#regUsername').val();
 			// refresh session state
 			this.isLoggedIn();
@@ -279,7 +307,7 @@ class FidoTutorial {
 	}
 
 	onAuthResult(authResponse) {
-		if (authResponse.Error === "False") {
+		if (authResponse.Error === 'False') {
 			let response = authResponse.Response;
 			this.isLoggedIn();
 		}
@@ -287,7 +315,7 @@ class FidoTutorial {
 			let errorMsg = JSON.parse(authResponse.Message);
 			let authresponse = JSON.parse(errorMsg.authresponse);
 			let error = authresponse.Error;
-			if (error.includes("ERR")) {
+			if (error.includes('ERR')) {
 				this.onError(error.split(':')[1]);
 			}
 			else {
@@ -297,7 +325,7 @@ class FidoTutorial {
 	}
 
 	onError(errMsg) {
-		alert(errMsg);
+		alert(errMsg);	
 	}
 
 	post(endpoint, data) {
