@@ -34,7 +34,7 @@ wget https://github.com/StrongKey/WebAuthn/raw/master/WebAuthn.tgz
 tar xvzf WebAuthn.tgz -C payara41/glassfish/domains/domain1/docroot/
 ```
 
-5. Now point your browser to the following URL: https://<YOUR SERVER ADDRESS>:8181/tutorial.html. Remember to be sure that your firewall allows access to port 8181.
+5. Now point your browser to the following URL: https://\<YOUR SERVER ADDRESS>:8181/tutorial.html. Remember to be sure that your firewall allows access to port 8181.
 
 
 If you would like to contribute to the [sample WebAuthn client](https://github.com/StrongKey/WebAuthn) project, please read [CONTRIBUTING.md](https://github.com/StrongKey/WebAuthn/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
