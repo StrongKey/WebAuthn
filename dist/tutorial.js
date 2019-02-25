@@ -67,9 +67,6 @@
 	}
 })();
 
-// var textEncoder = new TextEncoder("utf-8");
-// var textDecoder = new TextDecoder("utf-8");
-
 // ES6 class - no compilation required in modern browser
 class FidoTutorial {
 	constructor() {
@@ -100,7 +97,6 @@ class FidoTutorial {
 			}
 			else {
 				this.post('preregisterExisting', {
-					// "username": $('#regUsername').val(),
 					"displayName": $('#regDisplayName').val()
 				})
 					.done((resp) => {
@@ -118,7 +114,6 @@ class FidoTutorial {
 
 			this.post('preauthenticate', {
 				"username": $('#authUsername').val()
-				// "displayName": $('#regDisplayName').val()
 			})
 				.done((resp) => {
 					if (resp.Error == "true") onError(resp.Message);
@@ -154,7 +149,6 @@ class FidoTutorial {
 				$('#sessionStatus').text(this.username || "(none)");
 				$('#logout').prop('disabled', !this.loggedIn);
 				$('#regUsername').prop('disabled', this.loggedIn);
-				// $('#regDisplayName').prop('disabled', this.loggedIn);
 				$('#authUsername').prop('disabled', this.loggedIn);
 				$('#authSubmit').prop('disabled', this.loggedIn);				
 			})
@@ -177,15 +171,11 @@ class FidoTutorial {
 			credentialsContainer.credentials.create({ publicKey: challengeBuffer.Response })
 				.then((resp) => {
 					let response = this.preregResponseToBase64(resp);
-					// let that = this;
 					if (this.registering) {
 						if (!this.loggedIn) {
 							this.post('register', response)
 								.done(regResponse => that.onRegResult(regResponse))
 								.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
-							// .catch(error => {
-							// 	that.onError(error.Message)
-							// });
 						}
 						else {
 							this.post('registerExisting', response)
@@ -222,16 +212,9 @@ class FidoTutorial {
 		}
 	}
 
-	// registerExisting(data) {
-	// 	this.post('registerExisting', data, (respData) => {
-	// 		this.registerExistingResponse(respData);
-	// 	});
-	// }
-
 	preregToBuffer(input) {
 		input = JSON.parse(input);
 		input.Response.challenge = base64url.decode(input.Response.challenge);
-		// console.log(textDecoder.decode(input.Response.challenge));
 		input.Response.user.id = base64url.decode(input.Response.user.id);
 
 		if (input.Response.excludeCredentials) {
@@ -249,7 +232,7 @@ class FidoTutorial {
 
 		if (input.Response.allowCredentials) {
 			for (let i = 0; i < input.Response.allowCredentials.length; i++) {
-				//Because these were stored incorrectly, must convert from Base64 to Base64URL safe first
+				// must convert from Base64 to Base64URL safe first
 				input.Response.allowCredentials[i].id = input.Response.allowCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
 				input.Response.allowCredentials[i].id = base64url.decode(input.Response.allowCredentials[i].id);
 			}
@@ -293,20 +276,11 @@ class FidoTutorial {
 	}
 
 	onAuthResult(authResponse) {
-		// console.log("authResponse : " + JSON.stringify(authResponse));
 		if (authResponse.Error === "False") {
 			let response = authResponse.Response;
-			// console.log("response ==  " + response);
-			//if (response === "Successfully processed sign response") {
-			// console.log("Successfully processed sign response");
-			// let username = this._sharedService.getUsername();
-			// this._sharedService.setUsername(username);
-			// this.zone.run(() => this._router.navigateByUrl("/profile"));
-			// }
 			this.isLoggedIn();
 		}
 		else {
-			// console.log("else - onAuthResultonAuthResult");
 			let errorMsg = JSON.parse(authResponse.Message);
 			let authresponse = JSON.parse(errorMsg.authresponse);
 			let error = authresponse.Error;
