@@ -11,21 +11,21 @@
 <body>
 	<h1>STRONGKEY FIDO TUTORIAL</h1>
 
-	<div class="" style="padding-top: 20px">
-		<div style="display: inline-block">Logged In: </div>
-		<div id="sessionStatus" style="display: inline-block">(unknown)</div>
-		<button class="" id="registerSubmit" style="display: none; margin-left: 10px">
-		Log Out 
+	<div class="button-group">
+		<div class="login-field" style="display: inline-block">Logged in user:</div>
+		<div id="sessionStatus" class="" style="display: inline-block">(unknown)</div>
+		<button class="login-field" id="logout">
+			Log Out
 		</button>
 	</div>
 
-	<div class="" style="padding-top: 30px">
-		<div style="">
-			<input autocomplete="off" class="" id="regUsername" placeholder="Username" required="" style=""
+	<div class="button-group">
+		<div>
+			<input autocomplete="off" class="login-field" id="regUsername" placeholder="Username" required=""
 				type="text">
-			<input autocomplete="off" class="" id="regDisplayName" placeholder="Display Name" required=""
-				style="margin-left: 10px" type="text">
-			<button class="" id="regSubmit" style="margin-left: 10px">
+			<input autocomplete="off" class="login-field" id="regDisplayName" placeholder="Display Name" required=""
+				type="text">
+			<button class="login-field" id="regSubmit" style="margin-left: 10px">
 				Register New Key
 			</button>
 		</div>
@@ -33,10 +33,10 @@
 		<p style="color: green; margin-top: 5px"></p> -->
 	</div>
 
-	<div class="" style="padding-top: 20px">
-		<div style="">
-			<input class="" name="authUsername" placeholder="Username" required="" style="" type="text">
-			<button class="" id="authSubmit" style="margin-left: 10px">
+	<div class="button-group">
+		<div>
+			<input class="login-field" id="authUsername" placeholder="Username" required="" type="text">
+			<button class="login-field" id="authSubmit">
 				Authenticate
 			</button>
 		</div>

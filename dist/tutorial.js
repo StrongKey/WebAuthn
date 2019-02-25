@@ -67,8 +67,8 @@
 	}
 })();
 
-var textEncoder = new TextEncoder("utf-8");
-var textDecoder = new TextDecoder("utf-8");
+// var textEncoder = new TextEncoder("utf-8");
+// var textDecoder = new TextDecoder("utf-8");
 
 // ES6 class - no compilation required in modern browser
 class FidoTutorial {
@@ -84,61 +84,87 @@ class FidoTutorial {
 		this.isLoggedIn();
 
 		$('#regSubmit').click(() => {
+			this.registering = true;
 			if (!this.loggedIn) {
-				this.registering = true;
 				this.post('preregister', {
 					"username": $('#regUsername').val(),
 					"displayName": $('#regDisplayName').val()
 				})
-				.then((resp) => {
-					if (resp.Error == "true") onError(resp.Message);
-					this.register(resp.Response);
-				})
-				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
+					.done((resp) => {
+						if (resp.Error == "true") onError(resp.Message);
+						this.register(resp.Response);
+					})
+					.fail((jqXHR, textStatus, errorThrown) => { 
+						this.onError(jqXHR.responseJSON.Message || textStatus); 
+					});
 			}
 			else {
 				this.post('preregisterExisting', {
-					"username": $('#regUsername').val(),
+					// "username": $('#regUsername').val(),
 					"displayName": $('#regDisplayName').val()
 				})
-				.then((resp) => {
-					if (resp.Error == "true") onError(resp.Message);
-					this.registerExisting(resp.Response);
-				})
-				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
+					.done((resp) => {
+						if (resp.Error == "true") onError(resp.Message);
+						this.register(resp.Response);
+					})
+					.fail((jqXHR, textStatus, errorThrown) => { 
+						this.onError(jqXHR.responseJSON.Message || textStatus); 
+					});
 			}
 		});
 
 		$('#authSubmit').click(() => {
 			this.registering = false;
-			this.preauth({
-				"username": $('#regUsername').val(),
-				"displayName": $('#regDisplayName').val()
+
+			this.post('preauthenticate', {
+				"username": $('#authUsername').val()
+				// "displayName": $('#regDisplayName').val()
 			})
-			.then((resp) => {
-				if (resp.Error == "true") onError(resp.Message);
-				this.authenticate(resp.Response);
-			})
-			.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
+				.done((resp) => {
+					if (resp.Error == "true") onError(resp.Message);
+					this.authenticate(/* JSON.parse(JSON.stringify(resp)) */ resp.Response);
+				})
+				.fail((jqXHR, textStatus, errorThrown) => { 
+					if (jqXHR.status = 401) {
+						this.onError("Username doesn't exist");
+					} 
+					else {
+						this.onError(jqXHR.responseJSON.Message || textStatus); 
+					}
+				});
+		});
+
+		$('#logout').click(() => {
+			this.post('logout', null)
+				.done((resp) => {
+					if (resp.Error == "true") onError(resp.Message);
+					this.isLoggedIn();
+				})
+				.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 		});
 	}
 
 	isLoggedIn() {
 		this.post('isLoggedIn', null)
-			.then((resp) => {
+			.done((resp) => {
 				if (resp.Error == "true") onError(resp.Message);
-				this.loggedIn = (resp.Response === "True");
+				this.username = resp.Response;
+				this.loggedIn = !!this.username;
 				// should be handling this using binding but keeping it simple for demo
-				$('#sessionStatus').text(this.loggedIn);
+				$('#sessionStatus').text(this.username || "(none)");
+				$('#logout').prop('disabled', !this.loggedIn);
+				$('#regUsername').prop('disabled', this.loggedIn);
+				// $('#regDisplayName').prop('disabled', this.loggedIn);
+				$('#authUsername').prop('disabled', this.loggedIn);
+				$('#authSubmit').prop('disabled', this.loggedIn);				
 			})
 			.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
-			
+
 		return this.isLoggedIn;
 	}
 
 	register(preregResponse) {
 		let that = this;
-
 		if (preregResponse.serviceErr != null) {
 			this.onError(preregResponse.serviceErr.Message);
 		}
@@ -155,42 +181,77 @@ class FidoTutorial {
 					if (this.registering) {
 						if (!this.loggedIn) {
 							this.post('register', response)
-								.then(regResponse => that.onRegResult(regResponse))
-								.catch(error => {
-									that.onError(error.Message)
-								});
+								.done(regResponse => that.onRegResult(regResponse))
+								.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
+							// .catch(error => {
+							// 	that.onError(error.Message)
+							// });
 						}
 						else {
 							this.post('registerExisting', response)
-								.then(regResponse => that.onRegResult(regResponse))
-								.catch(error => {
-									that.onError(error.Message)
-								});
+								.done(regResponse => that.onRegResult(regResponse))
+								.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
 						}
-					}				
-				}).catch(error => {
-					that.onError(error.Message)
+					}
+				})
+				.catch(error => {
+					that.onError(error)
 				});
 		}
 	}
 
-	registerExisting(data) {
-		this.post('registerExisting', data, (respData) => {
-			this.registerExistingResponse(respData);
-		});
+	authenticate(preauthResponse) {
+		let that = this;
+		if (preauthResponse.serviceErr != null) {
+			this.onError(preauthResponse.serviceErr.Message);
+		}
+		else {
+			let challengeBuffer = this.preauthToBuffer(preauthResponse);
+			let credentialsContainer;
+			credentialsContainer = window.navigator;
+			credentialsContainer.credentials.get({ publicKey: challengeBuffer.Response })
+				.then((resp) => {
+					let response = that.preauthResponseToBase64(resp);
+					this.post('authenticate', response)
+						.done(authResponse => that.onAuthResult(authResponse))
+						.fail((jqXHR, textStatus, errorThrown) => { this.onError(textStatus); });
+				})
+				.catch((error) => {
+					this.onError(error);
+				});
+		}
 	}
+
+	// registerExisting(data) {
+	// 	this.post('registerExisting', data, (respData) => {
+	// 		this.registerExistingResponse(respData);
+	// 	});
+	// }
 
 	preregToBuffer(input) {
 		input = JSON.parse(input);
-		
-		input.Response.challenge = window.base64url.decode(input.Response.challenge);
-		console.log(textDecoder.decode(input.Response.challenge));
+		input.Response.challenge = base64url.decode(input.Response.challenge);
+		// console.log(textDecoder.decode(input.Response.challenge));
+		input.Response.user.id = base64url.decode(input.Response.user.id);
 
-		input.Response.user.id = window.base64url.decode(input.Response.user.id);
 		if (input.Response.excludeCredentials) {
 			for (let i = 0; i < input.Response.excludeCredentials.length; i++) {
 				input.Response.excludeCredentials[i].id = input.Response.excludeCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
-				input.Response.excludeCredentials[i].id = window.base64url.decode(input.Response.excludeCredentials[i].id);
+				input.Response.excludeCredentials[i].id = base64url.decode(input.Response.excludeCredentials[i].id);
+			}
+		}
+		return input;
+	}
+
+	preauthToBuffer(input) {
+		input = JSON.parse(input);
+		input.Response.challenge = base64url.decode(input.Response.challenge);
+
+		if (input.Response.allowCredentials) {
+			for (let i = 0; i < input.Response.allowCredentials.length; i++) {
+				//Because these were stored incorrectly, must convert from Base64 to Base64URL safe first
+				input.Response.allowCredentials[i].id = input.Response.allowCredentials[i].id.replace(/\+/g, "-").replace(/\//g, "_").replace(/=/g, "");
+				input.Response.allowCredentials[i].id = base64url.decode(input.Response.allowCredentials[i].id);
 			}
 		}
 		return input;
@@ -207,35 +268,59 @@ class FidoTutorial {
 		return copyOfDataResponse;
 	}
 
+	preauthResponseToBase64(input) {
+		let copyOfDataResponse = {};
+		copyOfDataResponse.id = input.id;
+		copyOfDataResponse.rawId = base64url.encode(input.rawId);
+		copyOfDataResponse.response = {};
+		copyOfDataResponse.response.authenticatorData = base64url.encode(input.response.authenticatorData);
+		copyOfDataResponse.response.signature = base64url.encode(input.response.signature);
+		copyOfDataResponse.response.userHandle = base64url.encode(input.response.userHandle);
+		copyOfDataResponse.response.clientDataJSON = base64url.encode(input.response.clientDataJSON);
+		copyOfDataResponse.type = input.type;
+		return copyOfDataResponse;
+	}
+
 	onRegResult(regResponse) {
 		let responseJSON = JSON.parse(JSON.stringify(regResponse));
 		if (responseJSON.Error == "true") onError(resp.Message);
 
-		// let body = JSON.parse(JSON.stringify(responseJSON.body));
-		// let body = responseJSON;
-		// let error = responseJSON.Error;
-		// let message = body.Message;
 		if (responseJSON.Response === "Successfully processed registration response") {
 			this.username = $('#regUsername').val();
 			// refresh session state
 			this.isLoggedIn();
-		} 
+		}
+	}
+
+	onAuthResult(authResponse) {
+		// console.log("authResponse : " + JSON.stringify(authResponse));
+		if (authResponse.Error === "False") {
+			let response = authResponse.Response;
+			// console.log("response ==  " + response);
+			//if (response === "Successfully processed sign response") {
+			// console.log("Successfully processed sign response");
+			// let username = this._sharedService.getUsername();
+			// this._sharedService.setUsername(username);
+			// this.zone.run(() => this._router.navigateByUrl("/profile"));
+			// }
+			this.isLoggedIn();
+		}
+		else {
+			// console.log("else - onAuthResultonAuthResult");
+			let errorMsg = JSON.parse(authResponse.Message);
+			let authresponse = JSON.parse(errorMsg.authresponse);
+			let error = authresponse.Error;
+			if (error.includes("ERR")) {
+				this.onError(error.split(':')[1]);
+			}
+			else {
+				this.onError(error.Message);
+			}
+		}
 	}
 
 	onError(errMsg) {
 		alert(errMsg);
-	}
-
-	preauthenticate(data) {
-		this.post('preauthenticate', data, (respData) => {
-			this.preauthenticateResponse(respData);
-		});
-	}
-
-	authenticate(data) {
-		this.post('authenticate', data, (respData) => {
-			this.authenticateResponse(respData);
-		});
 	}
 
 	post(endpoint, data) {
