@@ -5,7 +5,7 @@ Click these links to learn more:
 
 - [WebAuthn](https://en.wikipedia.org/wiki/WebAuthn) on Wikipedia
 - Browse the entire [W3 Schools Web Authentication specification](https://www.w3.org/TR/webauthn/)
-  - For a good visual of WebAuthn API calls in action, see [these diagrams](https://www.w3.org/TR/webauthn/#api)
+- Or, for a good visual of WebAuthn API calls in action, see [these diagrams](https://www.w3.org/TR/webauthn/#api)
 
 ## Prerequisites
 
