@@ -16,7 +16,7 @@ Click these links to learn more:
 
 ## Installation Instructions
 
-1. Switch to (or login as) the _strongkey_ user.
+1. Switch to (or login as) the _strongkey_ user. The default password for the _strongkey_ user is _ShaZam123_.
   
     ```sh
     su strongkey
