@@ -1,5 +1,5 @@
 # WebAuthn
-This project is a sample WebAuthn client written to work with the [StrongKey FIDO Server](https://github.com/StrongKey/FIDO-Server) and [sample Relying Party](https://github.com/StrongKey/relying-party-java).
+This project is a sample WebAuthn client written to work with the [StrongKey FIDO Server](https://github.com/StrongKey/FIDO-Server) and [sample Relying Party](https://github.com/StrongKey/relying-party-java). It is intended to demonstrate the basic web service calls needed to register users and keys, and to manage FIDO2 authentication. Follow the instructions below to get a functioning WebAuthn demo for your own use. After you're done, keep reading to learn how to make successful contributions to the sample WebAuthn project.
 
 
 #### Installation Instructions ####
@@ -9,7 +9,7 @@ This project is a sample WebAuthn client written to work with the [StrongKey FID
 - This WebAuthn example must have a means of connecting with a StrongKey FIDO Server and sample Relying Party.  
 - You must have a Java Application Server. These instructions assume you are using Payara (GlassFish).
 - The instructions assume the default ports for all the applications installed; Payara runs HTTPS on port 8181 by default, so make sure all firewall rules allow that port to be accessible.
-- **The sample commands below assume you are installing this RP on the same server where StrongKey FIDO Server was previously installed.** If you are installing on a separate server, you may have to adjust the commands accordingly.
+- **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO Server was previously installed.** If you are installing on a separate server, you may have to adjust the commands accordingly.
 
 1. Switch to (or login as) the _strongkey_ user.
   
