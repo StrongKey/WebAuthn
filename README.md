@@ -1,7 +1,7 @@
 # WebAuthn
 This project is a sample WebAuthn client written to work with the [StrongKey FIDO Server](https://github.com/StrongKey/FIDO-Server) and [sample Relying Party](https://github.com/StrongKey/relying-party-java). It is intended to demonstrate the basic web service calls needed to register users and keys, and to manage FIDO2 authentication. Follow the instructions below to get a functioning WebAuthn demo for your own use. After you're done, keep reading to learn how to make successful contributions to the sample WebAuthn project.
 
-Click [here](https://en.wikipedia.org/wiki/WebAuthn) to learn more about WebAuthn.
+Click [here](https://en.wikipedia.org/wiki/WebAuthn) to learn more about WebAuthn on Wikipedia.
 
 ## Prerequisites
 
