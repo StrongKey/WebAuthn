@@ -12,8 +12,7 @@ Click these links to learn more:
 - This WebAuthn example must have a means of connecting with a StrongKey FIDO Server and sample Relying Party.  
 - You must have a Java Application Server. These instructions assume you are using Payara (GlassFish).
 - The instructions assume the default ports for all the applications installed; Payara runs HTTPS on port 8181 by default, so make sure all firewall rules allow that port to be accessible.
-- **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO Server and sample Relying Party were previously installed.** If you are installing on a separate server, you may have to adjust the commands accordingly.
-- Sample WebAuthn code must be installed after StrongKey FIDO Server and the sample Relying Party code.
+- **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO Server and sample Relying Party have been installed.** It is recommended that the sample WebAuthn code is installed after StrongKey FIDO Server and the sample Relying Party code. If you are installing on a separate server, you may have to adjust the commands accordingly.
 
 ## Installation Instructions
 
