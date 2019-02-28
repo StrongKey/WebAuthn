@@ -5,47 +5,77 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<title>STRONGKEY FIDO Tutorial App</title>
-	<link href="tutorial.css" rel="stylesheet">
+	<link href="css/tutorial.css" rel="stylesheet">
 </head>
 
 <body>
-	<h1>STRONGKEY FIDO TUTORIAL</h1>
-
-	<div class="button-group">
-		<div class="login-field" style="display: inline-block">Logged in user:</div>
-		<div id="sessionStatus" class="" style="display: inline-block">(unknown)</div>
-		<button class="login-field" id="logout">
-			Log Out
-		</button>
-	</div>
-
-	<div class="button-group">
+	<div class="login-container">
 		<div>
-			<input autocomplete="off" class="login-field" id="regUsername" placeholder="Username" required=""
-				type="text">
-			<input autocomplete="off" class="login-field" id="regDisplayName" placeholder="Display Name" required=""
-				type="text">
-			<button class="login-field" id="regSubmit" style="margin-left: 10px">
-				Register New Key
-			</button>
+			<div class="login_logo">
+				<a id="logo"><img src="img/logo-lg.png" ></a>
+				<div id="loginUsername">...</div>
+			</div>
+			<h1 style="font-weight: 800;">STRONGKEY</h1>
+			<h1 style="font-weight: 300;">FIDO TUTORIAL</h1>
 		</div>
-		<!-- registration result message 
-		<p style="color: green; margin-top: 5px"></p> -->
-	</div>
 
-	<div class="button-group">
-		<div>
-			<input class="login-field" id="authUsername" placeholder="Username" required="" type="text">
-			<button class="login-field" id="authSubmit">
-				Authenticate
-			</button>
+		<div id="regPanel" class="form-panel" style="visibility: hidden;">
+			<h2>Register</h2>
+			<div id="regUsernamePanel">
+				<input autocomplete="off" class="met" id="regUsername" placeholder="Username" required=""
+					type="text">
+			</div>
+			<div>
+				<input autocomplete="off" class="met" id="regDisplayName" placeholder="Key Display Name" required=""
+					type="text">
+			</div>
+			<div>
+				<button class="met" id="regSubmit">
+					Register New Key
+				</button>
+			</div>
+			<!-- registration result message 
+			<p style="color: green; margin-top: 5px"></p> -->
 		</div>
-		<!-- authentication result message 
-		<p style="color: green; margin-top: 5px"></p> -->
-	</div>
 
-	<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
-	<script src="tutorial.js"></script>
+		<div id="authPanel" class="form-panel" style="visibility: hidden;">
+			<h2>Authenticate</h2>
+			<div>
+				<input class="met" id="authUsername" placeholder="Username" required="" type="text">
+			</div>
+			<div>
+				<button class="met" id="authSubmit">
+					Authenticate
+				</button>
+			</div>
+			<!-- authentication result message 
+			<p style="color: green; margin-top: 5px"></p> -->
+		</div>
+
+		<div id="logoutLinkPanel">
+			<p>&nbsp;<a  id="logout" href="javascript:">Log Out</a>&nbsp;</p>
+		</div>
+		<div id="registerLinkPanel">
+			<p>Don't have an account? <a id="showRegPanel" href="javascript:">Register</a></p>
+		</div>
+		<div id="authLinkPanel">
+			<p><a id="showAuthPanel" href="javascript:">Authenticate</a> with existing account</p>
+		</div>
+	
+		<div id="metadataPanel" style="visibility: hidden;">
+			<p id="metadataHeading">FIDO Data</p>
+			<div id="metadataContent">
+			</div>
+		</div>
+  </div>
+
+	<script src="js/jquery-3.3.1.min.js"></script>
+	<script src="js/base64js.min.js"></script>
+	<script src="js/buffer-5.2.1.js"></script> 
+	<script src="js/base64url.js"></script>
+	<script src="js/cbor.js"></script> 
+	<!-- <script src="js/parseAuthData.js"></script> -->
+	<script src="js/tutorial.js"></script>
 </body>
 
 </html>
