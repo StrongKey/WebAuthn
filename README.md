@@ -1,5 +1,5 @@
 # WebAuthn
-This project is a sample WebAuthn JavaScript/HTML webpage written to work with StrongKey's [FIDO Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party](https://github.com/StrongKey/relying-party-java).
+This project is a sample WebAuthn JavaScript/HTML web page written to work with StrongKey's [FIDO Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party](https://github.com/StrongKey/relying-party-java).
 
 The goal of this project is to demonstrate how to use the JavaScript calls built into WebAuthn (https://www.w3.org/TR/webauthn/) compliant web browsers (https://caniuse.com/#search=webauthn). It demonstrates how to parse the JSON values returned by StrongKey's FIDO server to call the WebAuthn API. **If you are a frontend developer looking to call the WebAuthn API, look at this code.**
 
