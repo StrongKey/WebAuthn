@@ -2,7 +2,7 @@
 
 body {
 	font-family: Arial, Helvetica, sans-serif;
-	padding: 20px;
+	padding: 15px;
 	background-image: url(../img/cyansmoke.jpg);
 	background-repeat: no-repeat;
 	background-size: cover;
@@ -82,6 +82,8 @@ a {
 	height: 120px;
 	/* width: 300px; */
 	overflow: auto;
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: 10px;
 	white-space: nowrap;
 	text-align: left;
 	padding: 5px;
@@ -139,6 +141,11 @@ span.fido-data-value {
 	width: 100px;
 }
 
+#loginUsername {
+	font-size: 12px;
+	font-family: Arial, Helvetica, sans-serif;
+}
+
 .dimmed {
 	opacity: 0.4;
 }
@@ -151,12 +158,12 @@ span.fido-data-value {
 	margin:0 auto;
 	border-radius: 5px;
 	background-color: rgb(255, 255, 255, 0.9);
-	width: 400px; 
-	height: 600px;
+	width: 320px; 
+	height: 500px;
 	font-family: Montserrat, Arial, Helvetica, sans-serif;
 	font-size: 14px;
 	font-weight: 300;
-	padding: 30px;
+	padding: 25px;
 	text-align: center;
 
 	/*
@@ -318,6 +325,11 @@ input.met[type="text"]:disabled {
 	background-color: #eee;
 }
 
+input.met:-moz-placeholder,
+input.met:focus {
+    box-shadow: none !important;
+}
+
 input.met[type="text"] {
 	background-color: #e9faff; 
 	border-bottom-color: rgb(0, 196, 217);
@@ -325,6 +337,7 @@ input.met[type="text"] {
 	border-radius: 5px;
     border-width: 1px;
 	border-color: #ccc;
+    box-shadow: none;
 
 	color: rgb(0, 64, 84);
 	padding-bottom: 10px;
