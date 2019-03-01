@@ -4,7 +4,7 @@
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>STRONGKEY FIDO Tutorial App</title>
+	<title>STRONGKEY FIDO2 Demo App</title>
 	<link href="css/tutorial.css" rel="stylesheet">
 </head>
 
@@ -16,7 +16,7 @@
 				<div id="loginUsername">...</div>
 			</div>
 			<h1 style="font-weight: 800;">STRONGKEY</h1>
-			<h1 style="font-weight: 300;">FIDO TUTORIAL</h1>
+			<h1><span style="font-weight: 500;">FIDO2</span> <span style="font-weight: 300;">Demo</span></h1>
 		</div>
 
 		<div id="regPanel" class="form-panel" style="visibility: hidden;">
@@ -39,13 +39,16 @@
 		</div>
 
 		<div id="authPanel" class="form-panel" style="visibility: hidden;">
-			<h2>Authenticate</h2>
+			<div id="authHeadingPanel">
+				<img width="24" src="img/login256.png">
+				<h2>Sign In</h2>
+			</div>
 			<div>
 				<input class="met" id="authUsername" placeholder="Username" required="" type="text">
 			</div>
 			<div>
 				<button class="met" id="authSubmit">
-					Authenticate
+					Sign In
 				</button>
 			</div>
 			<!-- authentication result message 
@@ -59,12 +62,15 @@
 			<p>Don't have an account? <a id="showRegPanel" href="javascript:">Register</a></p>
 		</div>
 		<div id="authLinkPanel">
-			<p><a id="showAuthPanel" href="javascript:">Authenticate</a> with existing account</p>
+			<p><a id="showAuthPanel" href="javascript:">Sign in</a> with existing account</p>
 		</div>
 	
-		<div id="metadataPanel" style="visibility: hidden;">
-			<p id="metadataHeading">FIDO Data</p>
-			<div id="metadataContent">
+		<div id="metadataPanel">
+			<div>
+				<input id="fidoCheckbox" class="met" type="checkbox">
+				<label id="fidoLabel" for="fidoCheckbox">FIDO Data</label>
+			</div>
+			<div id="metadataContent" style="visibility: hidden;">
 			</div>
 		</div>
   </div>

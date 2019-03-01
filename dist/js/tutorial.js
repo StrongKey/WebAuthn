@@ -99,7 +99,7 @@ class FidoTutorial {
 			this.updateView();
 		});	
 
-		$('#logo').click(() => {
+		$('#fidoCheckbox').click(() => {
 			this.debugPanelVisible = !this.debugPanelVisible;
 			this.updateView();
 		});
@@ -153,7 +153,7 @@ class FidoTutorial {
 
 		$('#authSubmit').prop('disabled', this.loggedIn);
 
-		$('#metadataPanel').css('visibility', this.debugPanelVisible ? 'visible' : 'hidden');
+		$('#metadataContent').css('visibility', this.debugPanelVisible ? 'visible' : 'hidden');
 		$('#metadataContent').empty().append(this.fidoData || '');
 
 		// $('#regUsername').prop('disabled', this.loggedIn);
