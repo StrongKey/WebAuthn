@@ -1,6 +1,6 @@
 'use strict';
 
-// ES6 class - no compilation required in modern browser
+// regular ES6 class
 class FidoTutorial {
 	constructor() {
 		this.server = '/webauthntutorial/';
@@ -18,58 +18,42 @@ class FidoTutorial {
 
 	// wire up the buttons
 	initActions() {
-		$('#regSubmit').click(() => {
-			this.fidoData = null;
-
-			if (!this.loggedIn) {
-				this.post('preregister', {
-					'username': $('#regUsername').val(),
-					'displayName': $('#regDisplayName').val()
-				})
-					.done(resp => {
-						if (resp.Error == 'true') {
-							onError(resp.Message);
-							return;
-						}
-						this.register(resp.Response);
-					})
-					.fail((jqXHR, textStatus, errorThrown) => {
-						this.onFailError(jqXHR, textStatus, errorThrown);
-					});
+		$('#regSubmit').keypress((e) => {
+			if (e && e.keyCode == 13) {
+				this.submitRegForm();
 			}
-			else {
-				this.post('preregisterExisting', {
-					'displayName': $('#regDisplayName').val()
-				})
-					.done(resp => {
-						if (resp.Error == 'true') {
-							onError(resp.Message);
-							return;
-						}
-						this.register(resp.Response);
-					})
-					.fail((jqXHR, textStatus, errorThrown) => {
-						this.onFailError(jqXHR, textStatus, errorThrown);
-					});
+		});
+
+		$('#regSubmit').click(() => {
+			this.submitRegForm();
+		});
+
+		$('#regUsername').keypress((e) => {
+			if (e && e.keyCode == 13) {
+				this.submitRegForm();
+			}
+		});
+		
+		$('#regDisplayName').keypress((e) => {
+			if (e && e.keyCode == 13) {
+				this.submitRegForm();
+			}
+		});
+
+		$('#authSubmit').keypress((e) => {
+			if (e && e.keyCode == 13) {
+				this.submitAuthForm();
 			}
 		});
 
 		$('#authSubmit').click(() => {
-			this.fidoData = null;
+			this.submitAuthForm();
+		});
 
-			this.post('preauthenticate', {
-				'username': $('#authUsername').val()
-			})
-				.done((resp) => {
-					if (resp.Error == 'true') {
-						onError(resp.Message);
-						return;
-					}
-					this.authenticate(/* JSON.parse(JSON.stringify(resp)) */ resp.Response);
-				})
-				.fail((jqXHR, textStatus, errorThrown) => {
-					this.onFailError(jqXHR, textStatus, errorThrown);
-				});
+		$('#authUsername').keypress((e) => {
+			if (e && e.keyCode == 13) {
+				this.submitAuthForm();
+			}
 		});
 
 		$('#logout').click(() => {
@@ -92,17 +76,71 @@ class FidoTutorial {
 		$('#showRegPanel').click(() => {
 			this.registering = true;
 			this.updateView();
-		});	
+		});
 
 		$('#showAuthPanel').click(() => {
 			this.registering = false;
 			this.updateView();
-		});	
+		});
 
 		$('#fidoCheckbox').click(() => {
 			this.debugPanelVisible = !this.debugPanelVisible;
 			this.updateView();
 		});
+	}
+
+	submitRegForm() {
+		this.fidoData = null;
+
+		if (!this.loggedIn) {
+			this.post('preregister', {
+				'username': $('#regUsername').val(),
+				'displayName': $('#regDisplayName').val()
+			})
+				.done(resp => {
+					if (resp.Error == 'true') {
+						onError(resp.Message);
+						return;
+					}
+					this.register(resp.Response);
+				})
+				.fail((jqXHR, textStatus, errorThrown) => {
+					this.onFailError(jqXHR, textStatus, errorThrown);
+				});
+		}
+		else {
+			this.post('preregisterExisting', {
+				'displayName': $('#regDisplayName').val()
+			})
+				.done(resp => {
+					if (resp.Error == 'true') {
+						onError(resp.Message);
+						return;
+					}
+					this.register(resp.Response);
+				})
+				.fail((jqXHR, textStatus, errorThrown) => {
+					this.onFailError(jqXHR, textStatus, errorThrown);
+				});
+		}
+	}
+
+	submitAuthForm() {
+		this.fidoData = null;
+
+		this.post('preauthenticate', {
+			'username': $('#authUsername').val()
+		})
+			.done((resp) => {
+				if (resp.Error == 'true') {
+					onError(resp.Message);
+					return;
+				}
+				this.authenticate(/* JSON.parse(JSON.stringify(resp)) */ resp.Response);
+			})
+			.fail((jqXHR, textStatus, errorThrown) => {
+				this.onFailError(jqXHR, textStatus, errorThrown);
+			});
 	}
 
 	// clear view model and update UI
@@ -113,13 +151,11 @@ class FidoTutorial {
 		this.loggedIn = false;
 		this.registering = false;
 
-		// this.debugPanelVisible = false;
-		// this.fidoData = null;
-
 		this.updateView();
 	}
 
 	// refresh widgets from view model
+	// could use binding but keeping it simple for demo
 	updateView() {
 		// default to authentication panel when not logged in
 		// if user wants to register or is logged in, show registration panel
@@ -128,6 +164,7 @@ class FidoTutorial {
 		this.setVisible('#authPanel', !showRegPanel);
 		this.setVisible('#regPanel', showRegPanel);
 
+		// dim cipher the octopus when user isn't logged in
 		if (this.loggedIn) {
 			$('.login_logo').removeClass('dimmed');
 		}
@@ -135,31 +172,28 @@ class FidoTutorial {
 			$('.login_logo').addClass('dimmed');
 		}
 
-		// could use binding but keeping it simple for demo
+		// truncate username if it's long so it fits neatly in upper right corner
 		$('#loginUsername').text(this.elide(this.username, 12) || '');
-		$('#authUsername').val(this.username || '');
+
+		// populate reg & auth form fields
 		$('#regUsername').val(this.username || '');
 		$('#regDisplayName').val(this.displayName || '');
+		$('#authUsername').val(this.username || '');
 
+		// reg panel shows only the display name when logged in (this one needs display:none so we use setVisible helper)
 		$('#regSubmit').text(this.loggedIn ? 'Register Additional Key' : 'Register New Key');
-		// this needs display:none
 		this.setVisible('#regUsernamePanel', !this.loggedIn);
 
-		$('#authUsername').css('visibility', !this.loggedIn ? 'visible' : 'hidden');
-
+		// show/hide the various link actions 
 		this.setVisible('#logoutLinkPanel', this.loggedIn);
 		this.setVisible('#registerLinkPanel', !this.loggedIn && !this.registering);
 		this.setVisible('#authLinkPanel', !this.loggedIn && this.registering);
 
-		$('#authSubmit').prop('disabled', this.loggedIn);
-
 		$('#metadataContent').css('visibility', this.debugPanelVisible ? 'visible' : 'hidden');
 		$('#metadataContent').empty().append(this.fidoData || '');
-
-		// $('#regUsername').prop('disabled', this.loggedIn);
-		// $('#authUsername').prop('disabled', this.loggedIn);
 	}
 
+	// trim string and add ellipsis
 	elide(s, len) {
 		if (!s) return "";
 
@@ -169,6 +203,7 @@ class FidoTutorial {
 		return s;
 	}
 
+	// hides child elements
 	setVisible(element, value) {
 		$(element).css('visibility', value ? 'visible' : 'hidden');
 		// to hide child elements
@@ -193,64 +228,68 @@ class FidoTutorial {
 			});
 	}
 
+	// interprets fido credentials response and displays in metadata panel
 	displayFIDOData(credResponse) {
-		// another way to go: record all the fields in the model and add a toString() method
 		this.fidoData = '';
 
-		// $('#metadataContent').append('type: ' + credResponse.type);
-
-		// display fido data if decode functions are available 
-		if (TextDecoder) {				
-			let clientData = base64url.decode(credResponse.response.clientDataJSON);
-			let textDecoder = new TextDecoder('utf-8');
-			let clientData2 = textDecoder.decode(clientData);
-			clientData2 = JSON.parse(clientData2);
-			this.fidoData += '<p style="margin-top: 0"><span class="fido-data-header">Client Data</span></p>';
-			this.fidoData += '<ul>';
-			for (let key of Object.keys(clientData2)) {
-				this.fidoData += '<li><span class="fido-data-key">' + key + ':</span> <span class="fido-data-value">' + clientData2[key] + '</span></li>';
-			}
-			this.fidoData += '</ul>';
-		}
-
-		if (CBOR) {
-			if (credResponse.response.attestationObject) {
-				let attest = base64url.decode(credResponse.response.attestationObject);
-				let attest2 = CBOR.decode(attest);
-				this.fidoData += '<p><span class="fido-data-header">Attestation</span></p>';
+		// try/catch this so nothing breaks on a failed decode
+		try {
+			// display fido data if decode functions are available 
+			if (typeof TextDecoder !== "undefined") {
+				let clientData = base64url.decode(credResponse.response.clientDataJSON);
+				let textDecoder = new TextDecoder('utf-8');
+				let clientData2 = textDecoder.decode(clientData);
+				clientData2 = JSON.parse(clientData2);
+				this.fidoData += '<p style="margin-top: 0"><span class="fido-data-header">Client Data</span></p>';
 				this.fidoData += '<ul>';
-				for (let key of Object.keys(attest2)) {
-					this.fidoData += '<li><span class="fido-data-key">' + key + ':</span> <span class="fido-data-value">';
-					switch (key) {
-						case 'authData':
-							this.fidoData += base64js.fromByteArray(attest2[key]);
-							break;
-
-						case 'attStmt':
-							if (Buffer) {
-								this.fidoData += base64js.fromByteArray(new Buffer(JSON.stringify(attest2[key])));
-							}
-							else {
-								this.fidoData += attest2[key];
-							}
-							break;
-
-						default:
-							this.fidoData += attest2[key];
-							break;
-					}
-					this.fidoData += '</span></li>'; 
+				for (let key of Object.keys(clientData2)) {
+					this.fidoData += '<li><span class="fido-data-key">' + key + ':</span> <span class="fido-data-value">' + clientData2[key] + '</span></li>';
 				}
 				this.fidoData += '</ul>';
 			}
 
-			// if (Buffer) {
-			// 	let authData = parseAuthData(new Buffer(attest2.authData));
-			//  this.fidoData += '<p>authData:</p>';
-			// 	for (let key of Object.keys(authData)) {
-			// 		this.fidoData += '<li>' + key + ': ' + authData[key] + '</li>';
-			// 	}
-			// }
+			if (CBOR) {
+				if (credResponse.response.attestationObject) {
+					let attest = base64url.decode(credResponse.response.attestationObject);
+					let attest2 = CBOR.decode(attest);
+					this.fidoData += '<p><span class="fido-data-header">Attestation</span></p>';
+					this.fidoData += '<ul>';
+					for (let key of Object.keys(attest2)) {
+						this.fidoData += '<li><span class="fido-data-key">' + key + ':</span> <span class="fido-data-value">';
+						switch (key) {
+							case 'authData':
+								this.fidoData += base64js.fromByteArray(attest2[key]);
+								break;
+
+							case 'attStmt':
+								if (Buffer) {
+									this.fidoData += base64js.fromByteArray(new Buffer(JSON.stringify(attest2[key])));
+								}
+								else {
+									this.fidoData += attest2[key];
+								}
+								break;
+
+							default:
+								this.fidoData += attest2[key];
+								break;
+						}
+						this.fidoData += '</span></li>';
+					}
+					this.fidoData += '</ul>';
+				}
+
+				// if (Buffer) {
+				// 	let authData = parseAuthData(new Buffer(attest2.authData));
+				//  this.fidoData += '<p>authData:</p>';
+				// 	for (let key of Object.keys(authData)) {
+				// 		this.fidoData += '<li>' + key + ': ' + authData[key] + '</li>';
+				// 	}
+				// }
+			}
+		}
+		catch (err) {
+			window.console && console.log(err.message);
 		}
 	}
 
@@ -411,25 +450,24 @@ class FidoTutorial {
 
 	onFailError(jqXHR, textStatus, errorThrown) {
 		var msg = '';
+
 		if (jqXHR) {
-			if (jqXHR.status === 0) {
-				msg = 'Network error/server not available';
-			}
-			else if (jqXHR.status === 401) {
-				msg = 'Authentication error/username does not exist';
-			}
-			else if (jqXHR.status === 409) {
-				// this is a good example of why we want domain-specific error codes
-				// simplifies our error handling logic
-				// we don't need to worry *which* resource already exists here
-				// client just maps keys to localized strings
-				// (note: spa and mobile apps may not have server logic to localize)
-				msg = 'Username already exists';
-			}
-			else if (jqXHR.responseJSON) {
-				if (jqXHR.responseJSON.Message) {
-					msg = jqXHR.responseJSON.Message;
-				}
+			// todo: replace this http status switch with map of domain-specific error codes => localized msgs
+			switch (jqXHR.status) {
+				case 0: 
+					msg = 'Network error/server not available';
+					break;		
+				case 401:
+					msg = 'Authentication error/username does not exist';
+					break;
+				case 409:
+					msg = 'Username already exists';
+					break;
+				default:	
+					if (jqXHR.responseJSON && jqXHR.responseJSON.Message) {
+						msg = jqXHR.responseJSON.Message;
+					}
+					break;
 			}
 		}
 
@@ -453,9 +491,9 @@ class FidoTutorial {
 		if (errMsg) {
 			msg = errMsg;
 		}
-		else if (response) {
-
-		}
+		// else if (response) {
+		// 	// this probably goes away 
+		// }
 		else {
 			msg = 'An unknown error was encountered'
 		}
@@ -480,4 +518,3 @@ class FidoTutorial {
 let app = new FidoTutorial();
 
 $(app.initComponents());
-
