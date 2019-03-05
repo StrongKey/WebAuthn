@@ -405,7 +405,7 @@ class FidoTutorial {
     }
 
     onFailError(jqXHR, textStatus, errorThrown) {
-        var msg = '';
+        var msg;
 
         if (jqXHR) {
             msg = this.errMsgMap[jqXHR.status];
@@ -432,6 +432,7 @@ class FidoTutorial {
 
     onResponseError(errMsg, response) {
         var msg;
+
         if (errMsg) {
             msg = errMsg;
         }
@@ -441,6 +442,7 @@ class FidoTutorial {
         else {
             msg = 'An unknown error was encountered'
         }
+
         alert(msg);
     }
 
@@ -449,6 +451,7 @@ class FidoTutorial {
     }
 
     initErrMap() {
+        // display friendlier messages for common cases
         this.errMsgMap = {
             0: 'Network error/server not available',
             401: 'Authentication error',

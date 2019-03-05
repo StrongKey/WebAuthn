@@ -49,10 +49,15 @@ a:visited {
   
 .login_logo {
   float: right;
-  text-align: center;
+  text-align: right;
   height: 64px;
   width: 90px;
   padding-top: 3px;
+}
+
+.login_logo img {
+  transition-property: width;
+  transition-duration: 0.5s;
 }
 
 #loginUsername {
@@ -169,7 +174,7 @@ input.met[type="text"]:disabled {
 
 input.met:-moz-placeholder,
 input.met:focus {
-    box-shadow: none !important;
+  box-shadow: none !important;
 }
 
 input.met[type="text"] {
@@ -184,6 +189,7 @@ input.met[type="text"] {
   padding-left: 12px;
   padding-right: 12px;
   padding-top: 10px;
+  outline: none;
 }
 
 #logoutPanel {
