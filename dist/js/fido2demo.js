@@ -293,21 +293,19 @@ class FidoTutorial {
                     let credResponse = this.preregResponseToBase64(credResp);
                     this.displayFIDOData(credResponse);
 
-                    if (this.registering) {
-                        if (!this.loggedIn) {
-                            this.post('register', credResponse)
-                                .done(regResponse => that.onRegResult(regResponse))
-                                .fail((jqXHR, textStatus, errorThrown) => {
-                                    this.onFailError(jqXHR, textStatus, errorThrown);
-                                });
-                        }
-                        else {
-                            this.post('registerExisting', credResponse)
-                                .done(regResponse => that.onRegResult(regResponse))
-                                .fail((jqXHR, textStatus, errorThrown) => {
-                                    this.onFailError(jqXHR, textStatus, errorThrown);
-                                });
-                        }
+                    if (!this.loggedIn) {
+                        this.post('register', credResponse)
+                            .done(regResponse => that.onRegResult(regResponse))
+                            .fail((jqXHR, textStatus, errorThrown) => {
+                                this.onFailError(jqXHR, textStatus, errorThrown);
+                            });
+                    }
+                    else {
+                        this.post('registerExisting', credResponse)
+                            .done(regResponse => that.onRegResult(regResponse))
+                            .fail((jqXHR, textStatus, errorThrown) => {
+                                this.onFailError(jqXHR, textStatus, errorThrown);
+                            });
                     }
                 })
                 .catch(error => {
