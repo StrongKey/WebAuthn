@@ -506,6 +506,7 @@ class FidoTutorial {
 
 if (supportedBrowser) {
     let app = new FidoTutorial();
+
     $(setTimeout(() => {
         $('.loading-spinner').hide();
         $('#main').show();

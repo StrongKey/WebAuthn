@@ -3,7 +3,7 @@ var hasCredentials = !!window.navigator.credentials;
 var hasClasses = true;
 
 try {
-    eval("class Test {};");
+    eval("class ThisClassRequiresES6 {}");
 }
 catch (e) {
     hasClasses = false;
