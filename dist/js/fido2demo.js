@@ -3,7 +3,6 @@
 // regular ES6 class
 class FidoTutorial {
     constructor() {
-
         this.server = '/webauthntutorial/';
         this.initErrMap();
     }
@@ -20,36 +19,18 @@ class FidoTutorial {
 
     // wire up the widgets
     initActions() {
-        $('#regSubmit').keypress((e) => {
-            if (e && e.keyCode == 13) {
-                this.submitRegForm();
-            }
-        });
-
         $('#regSubmit').click(() => {
             this.submitRegForm();
         });
 
-        $('#regUsername').keypress((e) => {
-            if (e && e.keyCode == 13) {
-                this.submitRegForm();
-            }
-        });
-
-        $('#regDisplayName').keypress((e) => {
-            if (e && e.keyCode == 13) {
-                this.submitRegForm();
-            }
-        });
-
-        $('#authSubmit').keypress((e) => {
-            if (e && e.keyCode == 13) {
-                this.submitAuthForm();
-            }
-        });
-
         $('#authSubmit').click(() => {
             this.submitAuthForm();
+        });
+
+        $('#regUsername,#regDisplayName').keypress((e) => {
+            if (e && e.keyCode == 13) {
+                this.submitRegForm();
+            }
         });
 
         $('#authUsername').keypress((e) => {
