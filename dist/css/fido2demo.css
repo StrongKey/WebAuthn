@@ -29,14 +29,6 @@ a:hover {
   text-decoration: underline;
 }
   
-a:active {
-  color: black;
-}
-  
-a:visited {
-  color: purple;
-}
-
 #main {
   display: flex;
   justify-content: center;
