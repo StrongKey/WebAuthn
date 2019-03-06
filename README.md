@@ -23,30 +23,24 @@ Follow the instructions below to deploy this project.
 1. Switch to (or login as) the _strongkey_ user. The default password for the _strongkey_ user is _ShaZam123_.
   
     ```sh
-    su strongkey
+    su - strongkey
     ```
 
-2. Change directory to _/usr/local/strongkey_ (the home directory for the _strongkey_ user).
-
-    ```sh
-    cd /usr/local/strongkey
-    ```
-
-3. Download the WebAuthn distribution file [WebAuthn.tgz](https://github.com/StrongKey/WebAuthn/blob/master/WebAuthn.tgz).
+2. Download the WebAuthn distribution file [WebAuthn.tgz](https://github.com/StrongKey/WebAuthn/blob/master/WebAuthn.tgz).
 
     ```sh
     wget https://github.com/StrongKey/WebAuthn/raw/master/WebAuthn.tgz
     ```
 
-4. Extract the distribution to the default Payara docroot.
+3. Extract the distribution to the default Payara docroot.
 
     ```sh
     tar xvzf WebAuthn.tgz -C payara41/glassfish/domains/domain1/docroot/
     ```
 
-5. Now point your browser to the following URL:
+4. Now point your browser to the following URL:
 
-    https://\<YOUR SERVER ADDRESS>:8181/tutorial.html
+    https://\<YOUR SERVER ADDRESS>:8181/index.html
     
     Remember to be sure that your firewall allows access to port 8181.
 
