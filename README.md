@@ -40,7 +40,7 @@ Follow the instructions below to deploy this project.
 
 4. Now point your browser to the following URL:
 
-    https://\<YOUR SERVER ADDRESS>:8181/index.html
+    https://\<YOUR SERVER FQDN>:8181/index.html
     
     Remember to be sure that your firewall allows access to port 8181.
 
