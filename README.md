@@ -1,7 +1,7 @@
 # WebAuthn
-This project is a sample WebAuthn JavaScript/HTML web page written to work with StrongKey's [FIDO Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party](https://github.com/StrongKey/relying-party-java).
+This project is a sample WebAuthn JavaScript/HTML web page written to work with StrongKey's [FIDO2 Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party](https://github.com/StrongKey/relying-party-java).
 
-The goal of this project is to demonstrate how to use the JavaScript calls built into WebAuthn (https://www.w3.org/TR/webauthn/) compliant web browsers (https://caniuse.com/#search=webauthn). It demonstrates how to parse the JSON values returned by StrongKey's FIDO server to call the WebAuthn API. **If you are a frontend developer looking to call the WebAuthn API, look at this code.**
+The goal of this project is to demonstrate how to use the JavaScript calls built into WebAuthn (https://www.w3.org/TR/webauthn/) compliant web browsers (https://caniuse.com/#search=webauthn). It demonstrates how to parse the JSON values returned by StrongKey's FIDO2 server to call the WebAuthn API. **If you are a frontend developer looking to call the WebAuthn API, look at this code.**
 
 Click these links to learn more:
 
@@ -13,10 +13,10 @@ Follow the instructions below to deploy this project.
 
 ## Prerequisites
 
-- This WebAuthn client must have a means of connecting with a StrongKey FIDO Server and sample Relying Party.  
+- This WebAuthn client must have a means of connecting with a StrongKey FIDO2 Server and sample Relying Party.  
 - You must have a Java Application Server. These instructions assume you are using Payara (GlassFish).
 - The instructions assume the default ports for all the applications installed; Payara runs HTTPS on port 8181 by default, so make sure all firewall rules allow that port to be accessible.
-- **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO Server and sample Relying Party have been installed.** It is recommended that the sample WebAuthn client is installed after StrongKey FIDO Server and the sample Relying Party code. If you are installing on a separate server, you may have to adjust the commands accordingly.
+- **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO2 Server and sample Relying Party have been installed.** It is recommended that the sample WebAuthn client is installed after StrongKey FIDO2 Server and the sample Relying Party code. If you are installing on a separate server, you may have to adjust the commands accordingly.
 
 ## Installation Instructions
 
