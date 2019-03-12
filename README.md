@@ -48,7 +48,7 @@ Follow the instructions below to deploy this project.
 
 
 ## Removal
-To uninstall the sample WebAuthn client, follow the uninstall instructions in the [FIDO2 Server, Community Edition Installation Guide](https://github.com/StrongKey/FIDO-Server/blob/master/docs/Installation_Guide_Linux.md#removal). Removing the StrongKey FIDO Server also removes the sample RP web application and sample WebAuthn client.
+To uninstall the sample WebAuthn client, follow the uninstall instructions in the [FIDO2 Server, Community Edition Installation Guide](https://github.com/StrongKey/FIDO-Server/blob/master/docs/Installation_Guide_Linux.md#removal). Removing the StrongKey FIDO2 Server also removes the sample RP web application and sample WebAuthn client.
 
 ## Contributing to Sample WebAuthn
 If you would like to contribute to the [sample WebAuthn client](https://github.com/StrongKey/WebAuthn) project, please read [CONTRIBUTING.md](https://github.com/StrongKey/WebAuthn/blob/master/CONTRIBUTING.md), then sign and return the [Contributor License Agreement (CLA)](https://cla-assistant.io/StrongKey/FIDO-Server).
