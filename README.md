@@ -1,7 +1,7 @@
 # WebAuthn
 This project is a sample WebAuthn JavaScript/HTML web page written to work with StrongKey's [FIDO2 Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party web application](https://github.com/StrongKey/relying-party-java).
 
-The goal of this project is to demonstrate how to use the JavaScript calls built into [WebAuthn](https://www.w3.org/TR/webauthn/)-compliant [web browsers](https://caniuse.com/#search=webauthn). It demonstrates how to parse the JSON values returned by StrongKey's FIDO2 server to call the WebAuthn API. **If you are a frontend developer looking to call the WebAuthn API, look at this code.**
+The goal of this project is to demonstrate how to use the JavaScript calls built into [WebAuthn](https://www.w3.org/TR/webauthn/)-compliant [web browsers](https://caniuse.com/#search=webauthn). It demonstrates how to parse the JSON values returned by StrongKey's FIDO2 Server to call the WebAuthn API. **If you are a front-end developer looking to call the WebAuthn API, this code demonstrates how to do so.**
 
 Click these links to learn more:
 
@@ -9,7 +9,7 @@ Click these links to learn more:
 - Browse the entire [W3 Schools Web Authentication specification](https://www.w3.org/TR/webauthn/)
 - Or, for a good visual of WebAuthn API calls in action, see [these diagrams](https://www.w3.org/TR/webauthn/#api)
 
-Follow the instructions below to deploy this project. 
+Follow the instructions below to deploy this project.
 
 ## Prerequisites
 
@@ -48,7 +48,6 @@ Follow the instructions below to deploy this project.
 
 
 ## Removal
-
 To uninstall the sample WebAuthn client, follow the uninstall instructions in the [FIDO2 Server, Community Edition Installation Guide](https://github.com/StrongKey/FIDO-Server/blob/master/docs/Installation_Guide_Linux.md#removal). Removing the StrongKey FIDO Server also removes the sample RP web application and sample WebAuthn client.
 
 ## Contributing to Sample WebAuthn
