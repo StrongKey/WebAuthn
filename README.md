@@ -1,4 +1,5 @@
 # WebAuthn
+
 This project is a sample WebAuthn JavaScript/HTML web page written to work with StrongKey's [FIDO2 Server, Community Edition](https://github.com/StrongKey/FIDO-Server) and sample [Relying Party web application](https://github.com/StrongKey/relying-party-java).
 
 The goal of this project is to demonstrate how to use the JavaScript calls built into [WebAuthn](https://www.w3.org/TR/webauthn/)-compliant [web browsers](https://caniuse.com/#search=webauthn). It explains how to parse the JSON values returned by StrongKey's FIDO2 Server when calling the WebAuthn API. **If you are a front-end developer looking to call the WebAuthn API, [this code](https://github.com/StrongKey/WebAuthn/blob/master/dist/js/fido2demo.js) demonstrates how to do so.**
@@ -12,7 +13,6 @@ Click these links to learn more:
 Follow the instructions below to deploy this project.
 
 ## Prerequisites
-
 - This WebAuthn client must have a means of connecting with a StrongKey FIDO2 Server and sample Relying Party web application.  
 - You must have a Java web application server. These instructions assume you are using Payara (GlassFish).
 - The instructions assume the default ports for all the applications installed; Payara runs HTTPS on port 8181 by default, so make sure all firewall rules allow that port to be accessible.
