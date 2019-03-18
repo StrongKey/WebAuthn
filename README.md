@@ -13,7 +13,7 @@ Click these links to learn more:
 Follow the instructions below to deploy this project.
 
 ## Prerequisites
-- This WebAuthn client must have a means of connecting with a StrongKey FIDO2 Server and sample Relying Party web application.  
+- This WebAuthn client must have a means of connecting with a StrongKey FIDO2 Server and sample Relying Party web application.
 - You must have a Java web application server. These instructions assume you are using Payara (GlassFish).
 - The instructions assume the default ports for all the applications installed; Payara runs HTTPS on port 8181 by default, so make sure all firewall rules allow that port to be accessible.
 - **The sample commands below assume you are installing this sample WebAuthn on the same server where StrongKey FIDO2 Server and sample Relying Party web application have been installed.** It is recommended that the sample WebAuthn client is installed after StrongKey FIDO2 Server and the sample Relying Party web application code. If you are installing on a separate server, you will have to adjust the commands accordingly.
@@ -44,8 +44,7 @@ Follow the instructions below to deploy this project.
     
     Remember to be sure that your firewall allows access to port 8181.
     
-    **NOTE:** The first time opening the above address may result in a warning from the self-signed certificate. This must be accepted to proceed.  
-
+    **NOTE:** The first time opening the above address may result in a warning from the self-signed certificate. This must be accepted to proceed.
 
 ## Removal
 To uninstall the sample WebAuthn client, follow the uninstall instructions in the [FIDO2 Server, Community Edition Installation Guide](https://github.com/StrongKey/FIDO-Server/blob/master/docs/Installation_Guide_Linux.md#removal). Removing the StrongKey FIDO2 Server also removes the sample RP web application and sample WebAuthn client.
@@ -55,5 +54,3 @@ If you would like to contribute to the [sample WebAuthn client](https://github.c
 
 ## Licensing
 This project is currently licensed under the [GNU Lesser General Public License v2.1](https://github.com/StrongKey/relying-party-java/blob/master/LICENSE).
-
-
