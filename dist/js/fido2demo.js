@@ -143,13 +143,13 @@ class FidoTutorial {
             });
     }
 
+    // submit registration fields to server using preregister/register REST calls
     submitRegForm() {
         this.fidoData = null;
 
         // When not logged in, use preregister to check existence of username. The preregister call
-        // doesn't require authentication. It returns a challenge, which is a random number (also called
-        // a nonce, [definition/shorthand] for "number used once". [check that on wikipedia]
-        // If username doesn't exist, proceed with registration. 
+        // doesn't require authentication. It returns a challenge, which contains a cryptographic
+        // nonce, i.e. a random number used only once. If username doesn't exist, proceed with registration. 
         if (!this.loggedIn) {
             this.post('preregister', {
                 'username': $('#regUsername').val(),
@@ -178,6 +178,7 @@ class FidoTutorial {
         }
     }
 
+    // submit authentication fields to server using preauthenticate/authenticate REST calls
     submitAuthForm() {
         this.fidoData = null;
 
@@ -196,7 +197,7 @@ class FidoTutorial {
             });
     }
 
-    // interprets fido credentials response and displays in metadata panel
+    // interpret fido credentials response and display in metadata panel
     displayFIDOData(credResponse) {
         this.fidoData = '';
 
@@ -246,14 +247,6 @@ class FidoTutorial {
                     }
                     this.fidoData += '</ul>';
                 }
-
-                // if (Buffer) {
-                //     let authData = parseAuthData(new Buffer(attest2.authData));
-                //  this.fidoData += '<p>authData:</p>';
-                //     for (let key of Object.keys(authData)) {
-                //         this.fidoData += '<li>' + key + ': ' + authData[key] + '</li>';
-                //     }
-                // }
             }
         }
         catch (err) {
@@ -497,6 +490,7 @@ class FidoTutorial {
     }
 }
 
+// hide loading graphic, init application
 if (supportedBrowser) {
     let app = new FidoTutorial();
 
