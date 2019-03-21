@@ -1,6 +1,13 @@
+/**
+* Copyright (c) 2019 StrongKey, Inc.
+*
+* Use of this source code is governed by the Gnu Lesser General Public License 2.1.
+* The license can be found at https://github.com/StrongKey/WebAuthn/blob/master/LICENSE.
+*/
+
 'use strict';
 
-// regular ES6 class
+// ECMAScript 6 class
 class FidoTutorial {
     constructor() {
         this.server = '/webauthntutorial/';
@@ -127,14 +134,9 @@ class FidoTutorial {
     queryLoggedIn() {
         this.post('isLoggedIn', null)
             .done(resp => {
-                if (resp.Error != 'true') {
-                    this.username = resp.Response;
-                    this.loggedIn = !!this.username;
-                    this.updateView();
-                }
-                else {
-                    onError(resp.Message);
-                }
+                this.username = resp.Response;
+                this.loggedIn = !!this.username;
+                this.updateView();
             })
             .fail((jqXHR, textStatus, errorThrown) => {
                 this.onFailError(jqXHR, textStatus, errorThrown);
@@ -144,31 +146,30 @@ class FidoTutorial {
     submitRegForm() {
         this.fidoData = null;
 
+        // When not logged in, use preregister to check existence of username. The preregister call
+        // doesn't require authentication. It returns a challenge, which is a random number (also called
+        // a nonce, [definition/shorthand] for "number used once". [check that on wikipedia]
+        // If username doesn't exist, proceed with registration. 
         if (!this.loggedIn) {
             this.post('preregister', {
                 'username': $('#regUsername').val(),
                 'displayName': $('#regDisplayName').val()
             })
                 .done(resp => {
-                    if (resp.Error == 'true') {
-                        onError(resp.Message);
-                        return;
-                    }
                     this.register(resp.Response);
                 })
                 .fail((jqXHR, textStatus, errorThrown) => {
                     this.onFailError(jqXHR, textStatus, errorThrown);
                 });
         }
+        // When logged in, use preregisterExisting to add additional keys associated with the username.
+        // It requires authentication since we must ensure that the person adding the key is authorized 
+        // to do so. It returns the same fields as preregister.
         else {
             this.post('preregisterExisting', {
                 'displayName': $('#regDisplayName').val()
             })
                 .done(resp => {
-                    if (resp.Error == 'true') {
-                        onError(resp.Message);
-                        return;
-                    }
                     this.register(resp.Response);
                 })
                 .fail((jqXHR, textStatus, errorThrown) => {
@@ -180,15 +181,15 @@ class FidoTutorial {
     submitAuthForm() {
         this.fidoData = null;
 
+        // When not logged in, use preauthenticate to check existence of username. Unsurprisingly, the 
+        // preauthenticate call doesn't require authentication. It returns a challenge that is supplied
+        // to the authenticator and then, assuming it is properly signed, to the authenticate REST endpoint.
+        // If the username doesn't exist, the preauthenticate call will fail.
         this.post('preauthenticate', {
             'username': $('#authUsername').val()
         })
             .done((resp) => {
-                if (resp.Error == 'true') {
-                    onError(resp.Message);
-                    return;
-                }
-                this.authenticate(/* JSON.parse(JSON.stringify(resp)) */ resp.Response);
+                this.authenticate(resp.Response);
             })
             .fail((jqXHR, textStatus, errorThrown) => {
                 this.onFailError(jqXHR, textStatus, errorThrown);
@@ -260,55 +261,78 @@ class FidoTutorial {
         }
     }
 
+    // The preregister call returns a challenge to be signed by a FIDO2 key to prove ownership of the key.
+    // The challenge contains metadata that tells the browser response preferences, as well as the types
+    // of keys preferred/supported by the FIDO2 server. For example, the server can state a preference for
+    // user verification, key attestation, or resident key where the username and secret key are stored
+    // in memory on the FIDO2 key).
     register(preregResponse) {
         let that = this;
-        if (preregResponse.serviceErr != null) {
-            this.onError(preregResponse.serviceErr.Message);
-        }
-        else {
-            let challengeBuffer = this.preregToBuffer(preregResponse);
-            let credentialsContainer;
-            credentialsContainer = window.navigator;
-            credentialsContainer.credentials.create({ publicKey: challengeBuffer.Response })
-                .then(credResp => {
-                    let credResponse = this.preregResponseToBase64(credResp);
-                    this.displayFIDOData(credResponse);
 
-                    if (!this.loggedIn) {
-                        this.post('register', credResponse)
-                            .done(regResponse => that.onRegResult(regResponse))
-                            .fail((jqXHR, textStatus, errorThrown) => {
-                                this.onFailError(jqXHR, textStatus, errorThrown);
-                            });
-                    }
-                    else {
-                        this.post('registerExisting', credResponse)
-                            .done(regResponse => that.onRegResult(regResponse))
-                            .fail((jqXHR, textStatus, errorThrown) => {
-                                this.onFailError(jqXHR, textStatus, errorThrown);
-                            });
-                    }
-                })
-                .catch(error => {
-                    that.onError(error);
-                });
-        }
+        // Convert base64url fields to ArrayBuffer format [verify].
+        let challengeBuffer = this.preregToBuffer(preregResponse);
+
+        // Browser passes challenge fields to WebAuthn API, which tells relevant FIDO2 authenticators 
+        // to generate a new set of public key credentials.
+        let credentialsContainer = window.navigator;
+        credentialsContainer.credentials.create({ publicKey: challengeBuffer.Response })
+            .then(credResp => {
+                // convert response to base64url 
+                let credResponse = this.preregResponseToBase64(credResp);
+
+                // update debugging panel
+                this.displayFIDOData(credResponse);
+
+                // If authenticator returns signed response, pass to FIDO2 server using register call.
+                if (!this.loggedIn) {
+                    // Use register when not logged in. The server verifies that a user with this username
+                    // has not been created.
+                    this.post('register', credResponse)
+                        .done(regResponse => that.onRegResult(regResponse))
+                        .fail((jqXHR, textStatus, errorThrown) => {
+                            this.onFailError(jqXHR, textStatus, errorThrown);
+                        });
+                }
+                else {
+                    // Use registerExisting when logged in. The server ensures that the user is still 
+                    // authenticated when registering the key.
+                    this.post('registerExisting', credResponse)
+                        .done(regResponse => that.onRegResult(regResponse))
+                        .fail((jqXHR, textStatus, errorThrown) => {
+                            this.onFailError(jqXHR, textStatus, errorThrown);
+                        });
+                }
+            })
+            .catch(error => {
+                that.onError(error);
+            });
     }
 
+    // The authenticate call returns a challenge to be signed by a FIDO2 key to prove ownership of the key.
+    // The challenge contains metadata that tells the browser response preferences such as whether user
+    // verification is required.
     authenticate(preauthResponse) {
         let that = this;
         if (preauthResponse.serviceErr != null) {
             this.onError(preauthResponse.serviceErr.Message);
         }
         else {
+            // Convert base64url fields to ArrayBuffer format.
             let challengeBuffer = this.preauthToBuffer(preauthResponse);
+
+            // Browser passes challenge fields to WebAuthn API, which asks FIDO2 authenticators 
+            // to sign the challenge if they own a key pair associated with that user's account.
             let credentialsContainer;
             credentialsContainer = window.navigator;
             credentialsContainer.credentials.get({ publicKey: challengeBuffer.Response })
                 .then(credResp => {
+                    // convert response to base64url 
                     let credResponse = that.preauthResponseToBase64(credResp);
+
+                    // update debugging panel
                     this.displayFIDOData(credResponse);
 
+                    // If authenticator returns signed response, pass to FIDO2 server using authenticate call.
                     this.post('authenticate', credResponse)
                         .done(authResponse => that.onAuthResult(authResponse))
                         .fail((jqXHR, textStatus, errorThrown) => {
@@ -320,6 +344,8 @@ class FidoTutorial {
                 });
         }
     }
+
+    // conversions between base64url and ArrayBuffer as specified by the WebAuthn API
 
     preregToBuffer(input) {
         input = JSON.parse(input);
@@ -341,7 +367,6 @@ class FidoTutorial {
 
         if (input.Response.allowCredentials) {
             for (let i = 0; i < input.Response.allowCredentials.length; i++) {
-                // must convert from Base64 to Base64URL safe first
                 input.Response.allowCredentials[i].id = input.Response.allowCredentials[i].id.replace(/\+/g, '-').replace(/\//g, '_').replace(/=/g, '');
                 input.Response.allowCredentials[i].id = base64url.decode(input.Response.allowCredentials[i].id);
             }
@@ -379,29 +404,12 @@ class FidoTutorial {
             this.clearModel();
             this.queryLoggedIn();
         }
-        else if (responseJSON.Error !== 'False') {
-            onError(resp.Message);
-            return;
-        }
     }
 
     onAuthResult(authResponse) {
-        if (authResponse.Error === 'False') {
-            let response = authResponse.Response;
-            this.clearModel();
-            this.queryLoggedIn();
-        }
-        else {
-            let errorMsg = JSON.parse(authResponse.Message);
-            let authresponse = JSON.parse(errorMsg.authresponse);
-            let error = authresponse.Error;
-            if (error.includes('ERR')) {
-                this.onError(error.split(':')[1]);
-            }
-            else {
-                this.onError(error.Message);
-            }
-        }
+        let response = authResponse.Response;
+        this.clearModel();
+        this.queryLoggedIn();
     }
 
     onFailError(jqXHR, textStatus, errorThrown) {
@@ -434,11 +442,11 @@ class FidoTutorial {
         var msg;
 
         if (errMsg) {
+            // if (errMsg.includes('ERR')) {
+            //     this.onError(errMsg.split(':')[1]);
+            // }
             msg = errMsg;
         }
-        // else if (response) {
-        //     // this probably goes away 
-        // }
         else {
             msg = 'An unknown error was encountered'
         }
@@ -450,8 +458,8 @@ class FidoTutorial {
         this.onResponseError(errMsg);
     }
 
+    // error messages for common HTTP status codes
     initErrMap() {
-        // display friendlier messages for common cases
         this.errMsgMap = {
             0: 'Network error/server not available',
             401: 'Authentication error',
@@ -460,6 +468,7 @@ class FidoTutorial {
         };
     }
 
+    // REST post helper
     post(endpoint, data) {
         return $.ajax({
             url: this.server + endpoint,
