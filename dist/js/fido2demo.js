@@ -257,7 +257,7 @@ class FidoTutorial {
     // The preregister call returns a challenge to be signed by a FIDO2 key to prove ownership of the key.
     // The challenge contains metadata that tells the browser response preferences, as well as the types
     // of keys preferred/supported by the FIDO2 server. For example, the server can state a preference for
-    // user verification, key attestation, or resident key where the username and secret key are stored
+    // user verification, key attestation, or resident key (where the username and secret key are stored
     // in memory on the FIDO2 key).
     register(preregResponse) {
         let that = this;
